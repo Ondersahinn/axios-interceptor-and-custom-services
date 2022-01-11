@@ -1,22 +1,39 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
+import { getPostDateService } from './api/service/generalService';
 import './App.css';
 
 function App() {
+
+  const [postData, setPostData] = useState([]);
+
+  useEffect(() => {
+    if (postData.length === 0) {
+      getPostData();
+    }
+  })
+
+  const getPostData = async () => {
+    const res = await getPostDateService();
+    if (!res.errStatus) {
+      console.log(res);
+      setPostData(res.data);
+    }
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <ul>
+          {postData.map((e) => {
+            return (
+              <li style={{textAlign:'left', listStyle:'none'}} key={e.id}>
+                <h4>e.tile</h4>
+                <p>{e.body}</p>
+              </li>
+            )
+          })}
+        </ul>
+
       </header>
     </div>
   );
